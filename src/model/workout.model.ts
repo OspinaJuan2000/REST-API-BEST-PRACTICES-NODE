@@ -1,9 +1,9 @@
 export interface Workout {
-  id: string;
+  id?: string;
   name: string;
   mode: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
   equipment: string[];
   exercises: string[];
   trainerTips: string[];

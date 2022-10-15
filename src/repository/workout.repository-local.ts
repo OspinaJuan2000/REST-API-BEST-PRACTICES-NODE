@@ -1,6 +1,7 @@
 import { Workout } from "../model/workout.model";
 import { WorkoutRepository } from "./workout.repository";
 import { db } from "../database/db";
+import HTTP_STATUS_CODES from "http-status-enum";
 
 export class WorkoutRepositoryLocal implements WorkoutRepository {
   private workouts: Workout[] = [];
@@ -15,60 +16,102 @@ export class WorkoutRepositoryLocal implements WorkoutRepository {
       -1;
 
     if (isAlreadyAdded) {
-      return;
+      throw {
+        status: HTTP_STATUS_CODES.BAD_REQUEST,
+        message: `Workout with the name ${newWorkout.name} already exists`,
+      };
     }
 
-    this.workouts.push(newWorkout);
-    return newWorkout;
+    try {
+      this.workouts.push(newWorkout);
+      return newWorkout;
+    } catch (error: any) {
+      throw {
+        status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+        message: error?.message || error,
+      };
+    }
   }
 
   getAllWorkouts(): Workout[] {
-    return this.workouts;
+    try {
+      return this.workouts;
+    } catch (error) {
+      throw { status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, message: error };
+    }
   }
 
   getOneWorkoutById(id: string): Workout | undefined {
-    const workout: Workout | undefined = this.workouts.find(
-      (workout) => workout.id === id
-    );
+    try {
+      const workout: Workout | undefined = this.workouts.find(
+        (workout) => workout.id === id
+      );
 
-    if (!workout) {
-      return;
+      if (!workout) {
+        throw {
+          status: HTTP_STATUS_CODES.BAD_REQUEST,
+          message: `Can't find workout with the id '${id}'`,
+        };
+      }
+
+      return workout;
+    } catch (error: any) {
+      throw {
+        status: error?.status || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+        message: error?.message || error,
+      };
     }
-
-    return workout;
   }
 
   updateOneWorkoutById(id: string, newWorkout: Workout): Workout | undefined {
-    const indexForUpdate: number = this.workouts.findIndex(
-      (workout) => workout.id === id
-    );
+    try {
+      const indexForUpdate: number = this.workouts.findIndex(
+        (workout) => workout.id === id
+      );
 
-    if (indexForUpdate === -1) {
-      return;
+      if (indexForUpdate === -1) {
+        throw {
+          status: HTTP_STATUS_CODES.BAD_REQUEST,
+          message: `Can't find workout with the id '${id}'`,
+        };
+      }
+
+      const updatedWorkout = {
+        ...this.workouts[indexForUpdate],
+        ...newWorkout,
+        updatedAt: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
+      };
+
+      this.workouts[indexForUpdate] = updatedWorkout;
+
+      return updatedWorkout;
+    } catch (error: any) {
+      throw {
+        status: error?.status || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+        message: error?.message || error,
+      };
     }
-
-    const updatedWorkout = {
-      ...this.workouts[indexForUpdate],
-      ...newWorkout,
-      updatedAt: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
-    };
-
-    this.workouts[indexForUpdate] = updatedWorkout;
-
-    return updatedWorkout;
   }
 
   deleteOneWorkoutById(id: string): void {
-    const indexForDeletion: number = this.workouts.findIndex(
-      (workout) => workout.id === id
-    );
+    try {
+      const indexForDeletion: number = this.workouts.findIndex(
+        (workout) => workout.id === id
+      );
 
-    console.log("index", indexForDeletion);
+      if (indexForDeletion === -1) {
+        throw {
+          status: HTTP_STATUS_CODES.BAD_REQUEST,
+          message: `Can't find workout with the id '${id}'`,
+        };
+      }
 
-    if (indexForDeletion === -1) {
-      return;
+      this.workouts.splice(indexForDeletion, 1);
+    } catch (error: any) {
+      throw {
+        status: error?.status || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+        message: error?.message || error,
+      };
     }
-
-    this.workouts.splice(indexForDeletion, 1);
   }
 }

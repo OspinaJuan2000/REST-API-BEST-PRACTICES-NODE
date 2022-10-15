@@ -1,20 +1,30 @@
 import { v4 } from "uuid";
 import { WorkoutRepositoryLocal } from "../repository/workout.repository-local";
 import { WorkoutRepository } from "../repository/workout.repository";
+import { Workout } from "../model/workout.model";
 
 const workoutRepository: WorkoutRepository = new WorkoutRepositoryLocal();
 
-const getAllWorkouts = () => {
-  const allWorkouts = workoutRepository.getAllWorkouts();
-  return allWorkouts;
+const getAllWorkouts = (): Workout[] => {
+  try {
+    const allWorkouts: Workout[] = workoutRepository.getAllWorkouts();
+    return allWorkouts;
+  } catch (error) {
+    throw error;
+  }
 };
 
-const getOneWorkout = (workoutId: any) => {
-  const workout = workoutRepository.getOneWorkoutById(workoutId);
-  return workout;
+const getOneWorkout = (workoutId: string): Workout | undefined => {
+  try {
+    const workout: Workout | undefined =
+      workoutRepository.getOneWorkoutById(workoutId);
+    return workout;
+  } catch (error) {
+    throw error;
+  }
 };
 
-const createNewWorkout = (newWorkout: any) => {
+const createNewWorkout = (newWorkout: Workout): Workout | undefined => {
   const workoutToInsert = {
     ...newWorkout,
     id: v4(),
@@ -22,21 +32,34 @@ const createNewWorkout = (newWorkout: any) => {
     updatedAt: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
   };
 
-  const createdWorkout = workoutRepository.createNewWorkout(workoutToInsert);
-
-  return createdWorkout;
+  try {
+    const createdWorkout: Workout | undefined =
+      workoutRepository.createNewWorkout(workoutToInsert);
+    return createdWorkout;
+  } catch (error) {
+    throw error;
+  }
 };
 
-const updateOneWorkout = (workoutId: any, changes: any) => {
-  const updatedWorkout = workoutRepository.updateOneWorkoutById(
-    workoutId,
-    changes
-  );
-  return updatedWorkout;
+const updateOneWorkout = (
+  workoutId: string,
+  changes: Workout
+): Workout | undefined => {
+  try {
+    const updatedWorkout: Workout | undefined =
+      workoutRepository.updateOneWorkoutById(workoutId, changes);
+    return updatedWorkout;
+  } catch (error) {
+    throw error;
+  }
 };
 
-const deleteOneWorkout = (workoutId: any) => {
-  workoutRepository.deleteOneWorkoutById(workoutId);
+const deleteOneWorkout = (workoutId: string): void => {
+  try {
+    workoutRepository.deleteOneWorkoutById(workoutId);
+  } catch (error) {
+    throw error;
+  }
 };
 
 export {

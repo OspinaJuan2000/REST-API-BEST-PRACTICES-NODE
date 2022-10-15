@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import * as workoutService from "../services/workout.service";
+import HTTP_STATUS_CODES from "http-status-enum";
+import { Workout } from "../model/workout.model";
 
-const createNewWorkout = (req: Request, res: Response) => {
+const createNewWorkout = (req: Request, res: Response): void => {
   const { body } = req;
 
   if (
@@ -11,6 +13,13 @@ const createNewWorkout = (req: Request, res: Response) => {
     !body.exercises ||
     !body.trainerTips
   ) {
+    res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({
+      status: "FAILED",
+      data: {
+        error:
+          "One of the following keys is missing or is empty in request body: 'name', 'mode', 'equipment', 'exercises', 'trainerTips'",
+      },
+    });
     return;
   }
 
@@ -22,48 +31,114 @@ const createNewWorkout = (req: Request, res: Response) => {
     trainerTips: body.trainerTips,
   };
 
-  const createdWorkout = workoutService.createNewWorkout(newWorkout);
-  res.status(201).json({ status: "OK", data: createdWorkout });
+  try {
+    const createdWorkout: Workout | undefined =
+      workoutService.createNewWorkout(newWorkout);
+    res
+      .status(HTTP_STATUS_CODES.CREATED)
+      .json({ status: "OK", data: createdWorkout });
+  } catch (error: any) {
+    res.status(error.status || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+      status: "FAILED",
+      data: {
+        error: error?.message || error,
+      },
+    });
+  }
 };
 
-const getAllWorkouts = (req: Request, res: Response) => {
-  const allWorkouts = workoutService.getAllWorkouts();
-  res.status(200).json({ status: "OK", data: allWorkouts });
+const getAllWorkouts = (req: Request, res: Response): void => {
+  try {
+    const allWorkouts: Workout[] = workoutService.getAllWorkouts();
+    res.status(HTTP_STATUS_CODES.OK).json({ status: "OK", data: allWorkouts });
+  } catch (error: any) {
+    res
+      .status(error?.status || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
-const getOneWorkout = (req: Request, res: Response) => {
+const getOneWorkout = (req: Request, res: Response): void => {
   const {
     params: { workoutId },
   } = req;
 
   if (!workoutId) {
+    res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({
+      status: "FAILED",
+      data: {
+        error: `Parameter 'id' can not be empty`,
+      },
+    });
     return;
   }
-  const workout = workoutService.getOneWorkout(workoutId);
-  res.status(200).json({ status: "OK", data: workout });
+
+  try {
+    const workout: Workout | undefined =
+      workoutService.getOneWorkout(workoutId);
+    res.status(HTTP_STATUS_CODES.OK).json({ status: "OK", data: workout });
+  } catch (error: any) {
+    res
+      .status(error?.status || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
-const updateOneWorkout = (req: Request, res: Response) => {
+const updateOneWorkout = (req: Request, res: Response): void => {
   const {
     body,
     params: { workoutId },
   } = req;
+
   if (!workoutId) {
+    res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({
+      status: "FAILED",
+      data: {
+        error: `Parameter 'id' can not be empty`,
+      },
+    });
     return;
   }
-  const updatedWorkout = workoutService.updateOneWorkout(workoutId, body);
-  res.status(200).json({ status: "OK", data: updatedWorkout });
+
+  try {
+    const updatedWorkout: Workout | undefined = workoutService.updateOneWorkout(
+      workoutId,
+      body
+    );
+
+    res
+      .status(HTTP_STATUS_CODES.OK)
+      .json({ status: "OK", data: updatedWorkout });
+  } catch (error: any) {
+    res
+      .status(error?.status || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
+      .send({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
-const deleteOneWorkout = (req: Request, res: Response) => {
+const deleteOneWorkout = (req: Request, res: Response): void => {
   const {
     params: { workoutId },
   } = req;
+
   if (!workoutId) {
+    res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({
+      status: "FAILED",
+      data: {
+        error: `Parameter 'id' can not be empty`,
+      },
+    });
     return;
   }
-  workoutService.deleteOneWorkout(workoutId);
-  res.status(204).json({ status: "OK" });
+
+  try {
+    workoutService.deleteOneWorkout(workoutId);
+    res.status(HTTP_STATUS_CODES.NO_CONTENT).json({ status: "OK" });
+  } catch (error: any) {
+    res
+      .status(error?.status || 500)
+      .send({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
 export {
