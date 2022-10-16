@@ -1,10 +1,13 @@
 import express, { Router } from "express";
+import apicache from "apicache";
 import * as workoutController from "../../controllers/workout.controller";
 import * as recordController from "../../controllers/record.controller";
 
+const cache = apicache.middleware;
+
 export const workoutRouter: Router = express.Router();
 
-workoutRouter.post("/", workoutController.createNewWorkout);
+workoutRouter.post("/", cache("2 minutes"), workoutController.createNewWorkout);
 
 workoutRouter.get("/", workoutController.getAllWorkouts);
 
