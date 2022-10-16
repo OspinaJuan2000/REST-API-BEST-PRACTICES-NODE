@@ -1,3 +1,5 @@
+[![.github/workflows/main.yml](https://github.com/OspinaJuan2000/REST-API-BEST-PRACTICES-NODE/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/OspinaJuan2000/REST-API-BEST-PRACTICES-NODE/actions/workflows/main.yml)
+
 # REST API BEST PRACTICES - Node
 
 ## Run project
