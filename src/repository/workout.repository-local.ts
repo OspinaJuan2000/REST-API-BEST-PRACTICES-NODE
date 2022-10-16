@@ -33,9 +33,17 @@ export class WorkoutRepositoryLocal implements WorkoutRepository {
     }
   }
 
-  getAllWorkouts(): Workout[] {
+  getAllWorkouts(filterParams: any): Workout[] {
+    let workouts: Workout[] = this.workouts;
+
     try {
-      return this.workouts;
+      if (filterParams.mode) {
+        return this.workouts.filter((workout) =>
+          workout.mode.toLowerCase().includes(filterParams.mode)
+        );
+      }
+
+      return workouts;
     } catch (error) {
       throw { status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, message: error };
     }

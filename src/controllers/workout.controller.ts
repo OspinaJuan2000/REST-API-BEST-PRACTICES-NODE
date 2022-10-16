@@ -48,8 +48,10 @@ const createNewWorkout = (req: Request, res: Response): void => {
 };
 
 const getAllWorkouts = (req: Request, res: Response): void => {
+  const { mode } = req.query;
+
   try {
-    const allWorkouts: Workout[] = workoutService.getAllWorkouts();
+    const allWorkouts: Workout[] = workoutService.getAllWorkouts({ mode });
     res.status(HTTP_STATUS_CODES.OK).json({ status: "OK", data: allWorkouts });
   } catch (error: any) {
     res

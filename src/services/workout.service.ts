@@ -5,9 +5,9 @@ import { Workout } from "../model/workout.model";
 
 const workoutRepository: WorkoutRepository = new WorkoutRepositoryLocal();
 
-const getAllWorkouts = (): Workout[] => {
+const getAllWorkouts = (filterParams: any): Workout[] => {
   try {
-    const allWorkouts: Workout[] = workoutRepository.getAllWorkouts();
+    const allWorkouts: Workout[] = workoutRepository.getAllWorkouts(filterParams);
     return allWorkouts;
   } catch (error) {
     throw error;
