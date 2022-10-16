@@ -1,13 +1,14 @@
 import { v4 } from "uuid";
 import { WorkoutRepositoryLocal } from "../repository/workout.repository-local";
 import { WorkoutRepository } from "../repository/workout.repository";
-import { Workout } from "../model/workout.model";
+import { Workout } from "../models/workout.model";
 
 const workoutRepository: WorkoutRepository = new WorkoutRepositoryLocal();
 
 const getAllWorkouts = (filterParams: any): Workout[] => {
   try {
-    const allWorkouts: Workout[] = workoutRepository.getAllWorkouts(filterParams);
+    const allWorkouts: Workout[] =
+      workoutRepository.getAllWorkouts(filterParams);
     return allWorkouts;
   } catch (error) {
     throw error;

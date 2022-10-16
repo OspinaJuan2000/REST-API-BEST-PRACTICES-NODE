@@ -12,9 +12,9 @@ jobs:
         with:
           node-version: "14.x"
       - name: Install dependencies
-        run: npm install
-      - name: Transpile TS to JS
-        run: npm run transpile
+        run: npm ci
+      - name: Generate build
+        run: npm run tsc
   deploy:
     runs-on: ubuntu-latest
     needs: [build]

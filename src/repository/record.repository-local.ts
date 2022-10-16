@@ -1,4 +1,4 @@
-import { Record } from "../model/record.model";
+import { Record } from "../models/record.model";
 import { RecordRepository } from "./record.repository";
 import { db } from "../database/db";
 import HTTP_STATUS_CODES from "http-status-enum";

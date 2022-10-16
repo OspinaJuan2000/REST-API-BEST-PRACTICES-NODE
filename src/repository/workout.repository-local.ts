@@ -1,4 +1,4 @@
-import { Workout } from "../model/workout.model";
+import { Workout } from "../models/workout.model";
 import { WorkoutRepository } from "./workout.repository";
 import { db } from "../database/db";
 import HTTP_STATUS_CODES from "http-status-enum";

@@ -1,4 +1,4 @@
-import { Workout } from "../model/workout.model";
+import { Workout } from "../models/workout.model";
 
 export interface WorkoutRepository {
   createNewWorkout(newWorkout: Workout): Workout | undefined;

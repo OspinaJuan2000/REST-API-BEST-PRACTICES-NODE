@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as recordService from "../services/record.service";
 import HTTP_STATUS_CODES from "http-status-enum";
-import { Record } from "../model/record.model";
+import { Record } from "../models/record.model";
 
 const getRecordForWorkout = (req: Request, res: Response): void => {
   const {

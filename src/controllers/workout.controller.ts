@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as workoutService from "../services/workout.service";
 import HTTP_STATUS_CODES from "http-status-enum";
-import { Workout } from "../model/workout.model";
+import { Workout } from "../models/workout.model";
 
 const createNewWorkout = (req: Request, res: Response): void => {
   const { body } = req;

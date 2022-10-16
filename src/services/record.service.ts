@@ -1,4 +1,4 @@
-import { Record } from "../model/record.model";
+import { Record } from "../models/record.model";
 import { RecordRepository } from "../repository/record.repository";
 import { RecordRepositoryLocal } from "../repository/record.repository-local";
 
